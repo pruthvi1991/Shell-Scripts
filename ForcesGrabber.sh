@@ -1,7 +1,17 @@
 #!/bin/bash
 
-rm log.forces
-rm -r postProcessing
+echo "This script will call execFlowFunctionObjects to integrate the pressure and viscous forces over the chosen patches. 
+This function may take a few minutes to execute, please be patient. Make sure you entered the desired function object 
+in system/controlDict. For Eg: #include "forceCoeffs" . If the function is commented this script will not work"
+
+sleep 2
+
+echo "Deleting log files from previous runs. You have 8 seconds to abort by holding ctrl-c"
+
+sleep 8
+#mkdir previous_data
+rm log.forces # ./previous_data/
+rm -r postProcessing # ./previous_data/
 
 endTime=$(grep -w 'endTime' ./system/controlDict | grep '[0-9]' | sed 's/;//g' | awk '{print$2}')	# Gets endTime value from controlDict
 intendTime=$(grep -w 'endTime' ./system/controlDict | grep '[0-9]' | sed 's/;//g' | awk '{print$2*1000}')       # Multiplying by 1000 to convert to integer in case endTime is float
