@@ -18,7 +18,7 @@ intendTime=$(grep -w 'endTime' ./system/controlDict | grep '[0-9]' | sed 's/;//g
 writeTime=$(grep -w 'writeInterval' ./system/controlDict | grep '[0-9]' | sed 's/;//g' | awk '{print$2}') # Gets writeInterval from controlDict
 execFlowFunctionObjects >> log.forces &		# Executes the function execFlowFunctionObjects and writes output to log.forces
 
-sleep 5
+sleep 15	# If there is no sleep time, bash proceeds to the next command before execFlowFunctionObjects is run. Increase this if your simulation is large
 
 presentTime=$(tail -22 log.forces | grep Time | awk '{print$3}' | awk NR==1)	# Checks for many time steps the function ran and gets the last time value
 intpresentTime=$(tail -22 log.forces | grep Time | awk '{print$3*1000}' | awk NR==1)	# Converting a possible float to integer
@@ -35,6 +35,7 @@ do
 	execFlowFunctionObjects -time $startTime: >> log.forces &
 	sleep 10	# Waits for 15 seconds before executing next command. This is necessary to ensure execFlowFunctionObjects is not re-run midway
 	presentTime=$(tail -22 log.forces | grep Time | awk '{print$3}' | awk NR==1)
+	echo $presentTime
 	intpresentTime=$(tail -22 log.forces | grep Time | awk '{print$3*1000}' | awk NR==1)
 done
 		
